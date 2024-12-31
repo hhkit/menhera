@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("menhera")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+419d33cc578984594c5a804acf982ee505816b53")]
 [assembly: System.Reflection.AssemblyProductAttribute("menhera")]
 [assembly: System.Reflection.AssemblyTitleAttribute("menhera")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
