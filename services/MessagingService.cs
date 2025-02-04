@@ -20,7 +20,7 @@ namespace menhera
         public long filter = filter;
     }
 
-    public class MessagingSystem
+    public class MessagingService
     {
         readonly Dictionary<EventType, List<MessageHandlerMeta>> listenerTable = [];
 

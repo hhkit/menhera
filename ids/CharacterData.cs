@@ -4,5 +4,6 @@ namespace menhera
     public struct CharacterData
     {
         public int startingHp;
+        public int[] staggerThresholds;
     }
 }

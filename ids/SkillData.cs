@@ -8,4 +8,5 @@ public struct SkillData
     public int coinCount;
 
     // coin effects?
+    public Effect[] coinEffects;
 }
