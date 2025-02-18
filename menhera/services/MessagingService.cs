@@ -5,7 +5,7 @@ Unlike a more traditional event system, it is the listeners who filter who tells
 
 namespace menhera
 {
-    public interface IEvent
+    public abstract class IEvent
     {
     }
 
@@ -20,7 +20,7 @@ namespace menhera
 
         public static MessageHandlerMeta Create<E>(ActorIdentifier character, MessageHandler<E> handler, long filter) where E : IEvent
         {
-            return new(character, (IEvent payload) => handler((E)payload), filter);
+            return new(character, payload => handler((E)payload), filter);
         }
     }
 
@@ -39,16 +39,21 @@ namespace menhera
 
         public void Listen<E>(ActorIdentifier listener, MessageHandler<E> handler, long filter) where E : IEvent
         {
-            GetEventTable(typeof(E))
-                .Append(MessageHandlerMeta.Create(listener, handler, filter));
+            GetEventTable<E>()
+                .Add(MessageHandlerMeta.Create(listener, handler, filter));
         }
 
-        public void Unlisten(Type eventType, ActorIdentifier listener)
+        public void Unlisten<E>(ActorIdentifier listener) where E : IEvent
         {
-            var table = GetEventTable(eventType);
+            var table = GetEventTable<E>();
             var removeMe = table.FindIndex(meta => meta.character == listener);
             if (removeMe != -1)
                 table.RemoveAt(removeMe);
+        }
+
+        private List<MessageHandlerMeta> GetEventTable<E>() where E : IEvent
+        {
+            return GetEventTable(typeof(E));
         }
 
         private List<MessageHandlerMeta> GetEventTable(Type eventType)

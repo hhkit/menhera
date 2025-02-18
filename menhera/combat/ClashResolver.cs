@@ -1,15 +1,10 @@
+using System.Diagnostics;
+
 namespace menhera
 {
-    // this stores the data for a single combatant during a clash
-    public struct ClashingCombatant(Combatant combatant, SkillData skill)
-    {
-        public Combatant Combatant { get; private set; } = combatant;
-        public SkillData Skill { get; private set; } = skill;
-        public int brokenCoins = 0;
-        public int coinsLeft { get => Skill.coinCount - brokenCoins; }
-    }
 
-    public class ClashResolver
+
+    public class ClashResolver(Clash clash)
     {
         public enum ClashResult
         {
@@ -18,26 +13,28 @@ namespace menhera
             EnemyWin
         }
 
-        public ClashingCombatant player, enemy;
-        private ServiceLocator services = ServiceLocator.Main;
+        public readonly Clash clash = clash;
+        private readonly ServiceLocator services = ServiceLocator.Main;
 
         private bool[] ResolveCoins(ClashingCombatant config)
         {
             var messagingService = services.GetService<MessagingService>();
+            var actorService = services.GetService<ActorService>();
+            var id = actorService.GetId(config.Combatant);
 
             var coinResolver = new CoinResolver(config.Combatant, services);
-            var coinResults = coinResolver.FlipCoins(config.Skill.coinCount - config.brokenCoins);
-            messagingService?.BroadcastEvent(config.Combatant.id, new OnCoinFlip(coinResults));
+            var coinResults = coinResolver.FlipCoins(config.Skill.CoinCount - config.brokenCoins);
+            messagingService?.BroadcastEvent(id, new OnCoinFlip(coinResults));
 
             foreach (var coinRes in coinResults)
-                messagingService?.BroadcastEvent(config.Combatant.id, coinRes ? new OnHeadsHit() : new OnTailsHit());
+                messagingService?.BroadcastEvent(id, coinRes ? new OnHeadsHit() : new OnTailsHit());
 
             return coinResults;
         }
 
         private int CalculateClashPower(SkillData skillData, bool[] coins)
         {
-            return skillData.basePower + coins.Select(x => x).Count() * skillData.coinPower;
+            return skillData.BasePower + coins.Select(x => x).Count() * skillData.CoinPower;
         }
 
         private int ResolveClashPower(ClashingCombatant combatant)
@@ -48,8 +45,8 @@ namespace menhera
 
         private ClashResult ResolveClashStep()
         {
-            var playerClashPower = ResolveClashPower(player);
-            var enemyClashPower = ResolveClashPower(enemy);
+            var playerClashPower = ResolveClashPower(clash.player);
+            var enemyClashPower = ResolveClashPower(clash.enemy);
 
             if (playerClashPower == enemyClashPower)
                 return ClashResult.Tie;
@@ -60,36 +57,41 @@ namespace menhera
         public ClashResult ResolveClash()
         {
             var messagingService = services.GetService<MessagingService>();
+            var actorService = services.GetService<ActorService>();
+            var playerId = actorService.GetId(clash.player.Combatant);
+            var enemyId = actorService.GetId(clash.enemy.Combatant);
 
             int clashStepCount = 0;
-            while (player.coinsLeft > 0 && enemy.coinsLeft > 0)
+            while (clash.player.coinsLeft > 0 && clash.enemy.coinsLeft > 0)
             {
                 clashStepCount++;
+                Debug.Assert(clashStepCount < 1000); // limit the number of iterations
+
                 switch (ResolveClashStep())
                 {
                     case ClashResult.PlayerWin:
-                        enemy.brokenCoins++;
+                        clash.enemy.brokenCoins++;
                         break;
                     case ClashResult.EnemyWin:
-                        player.brokenCoins++;
+                        clash.player.brokenCoins++;
                         break;
                 }
             }
 
-            var winner = player.coinsLeft > 0 ? ClashResult.PlayerWin : ClashResult.EnemyWin;
+            var winner = clash.player.coinsLeft > 0 ? ClashResult.PlayerWin : ClashResult.EnemyWin;
             switch (winner)
             {
                 case ClashResult.PlayerWin:
-                    messagingService?.BroadcastEvent(player.Combatant.id, new OnClashWin());
-                    messagingService?.BroadcastEvent(enemy.Combatant.id, new OnClashLose());
+                    messagingService?.BroadcastEvent(playerId, new OnClashWin());
+                    messagingService?.BroadcastEvent(enemyId, new OnClashLose());
                     break;
                 case ClashResult.EnemyWin:
-                    messagingService?.BroadcastEvent(enemy.Combatant.id, new OnClashWin());
-                    messagingService?.BroadcastEvent(player.Combatant.id, new OnClashLose());
+                    messagingService?.BroadcastEvent(enemyId, new OnClashWin());
+                    messagingService?.BroadcastEvent(playerId, new OnClashLose());
                     break;
                 case ClashResult.Tie:
+                    Debug.Assert(false);
                     break;
-
             }
             return winner;
         }

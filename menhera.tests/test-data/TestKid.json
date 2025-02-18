@@ -1,0 +1,16 @@
+{
+    "id": "player_test",
+    "name": "Test Kid",
+    "startingHp": 100,
+    "staggerThresholds": [
+        80,
+        40,
+    ],
+    "skills": [
+        {
+            "basePower": 4,
+            "coinPower": 4,
+            "coinCount": 2
+        }
+    ]
+}

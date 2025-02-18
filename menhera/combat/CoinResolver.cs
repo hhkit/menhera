@@ -1,11 +1,11 @@
 namespace menhera
 {
-    public class CoinResolver(Combatant combatant, ServiceLocator services)
+    public class CoinResolver(CombatActor combatant, ServiceLocator services)
     {
-        private readonly Combatant combatant = combatant;
+        private readonly CombatActor combatant = combatant;
         private readonly ServiceLocator services = services;
 
-        public CoinResolver(Combatant combatant)
+        public CoinResolver(CombatActor combatant)
         : this(combatant, ServiceLocator.Main)
         {
         }
