@@ -1,9 +1,15 @@
 namespace menhera
 {
-    public class CoinResolver(Combatant combatant)
+    public class CoinResolver(Combatant combatant, ServiceLocator services)
     {
-        private Combatant combatant  = combatant;
-        private ServiceLocator services  = ServiceLocator.Main;
+        private readonly Combatant combatant = combatant;
+        private readonly ServiceLocator services = services;
+
+        public CoinResolver(Combatant combatant)
+        : this(combatant, ServiceLocator.Main)
+        {
+        }
+
 
         public bool[] FlipCoins(int coinCount)
         {
