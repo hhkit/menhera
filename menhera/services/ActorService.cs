@@ -35,10 +35,6 @@ namespace menhera
         readonly Dictionary<CombatActor, ActorIdentifier> lookupTable = new();
         readonly TeamManager teamManager = teamManager;
 
-        public ActorService()
-        : this(ServiceLocator.Main.GetService<TeamManager>())
-        { }
-
         public ActorIdentifier GetId(CombatActor combatant)
         {
             if (lookupTable.TryGetValue(combatant, out var value))

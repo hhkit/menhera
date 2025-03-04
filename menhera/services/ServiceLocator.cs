@@ -41,7 +41,6 @@ namespace menhera
                 // get ctor, construct graph
                 foreach (var param in typeNode.ctor.GetParameters())
                 {
-                    Debug.WriteLine($"{typeNode.type.Name} -> {param}");
                     if (typeMap.TryGetValue(param.ParameterType, out var dependentTypeNode))
                     {
                         typeNode.dependencies.Add(dependentTypeNode);
