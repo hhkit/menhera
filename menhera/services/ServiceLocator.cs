@@ -81,7 +81,7 @@ namespace menhera
                         typeNode.initialized = true;
                     }
                 }
-                Debug.Assert(prevCount < serviceMap.Count, $"Ran out of initializable services {prevCount} < {serviceMap.Count}, max: {typeMap.Count}");
+                Debug.Assert(prevCount < serviceMap.Count, $"Could not initialize all services, services remaining: {typeMap.Count - serviceMap.Count} out of {typeMap.Count}");
             }
         }
 
