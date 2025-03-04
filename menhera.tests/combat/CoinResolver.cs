@@ -17,7 +17,7 @@ namespace menhera.tests
                 };
 
                 CoinResolver resolver = new(combatActor, services);
-                Debug.Assert(resolver.FlipCoin(), "High roll should always return heads");
+                Assert.IsTrue(resolver.FlipCoin(), "High roll should always return heads");
             }
 
             {
@@ -28,7 +28,7 @@ namespace menhera.tests
                 };
 
                 CoinResolver resolver = new(combatActor, services);
-                Debug.Assert(resolver.FlipCoin() == false, "Low roll should always return tails");
+                Assert.IsFalse(resolver.FlipCoin(), "Low roll should always return tails");
             }
         }
 
@@ -43,7 +43,7 @@ namespace menhera.tests
                 };
 
                 CoinResolver resolver = new(combatActor, services);
-                Debug.Assert(resolver.FlipCoins(100).All(x => x), "High roll should always return heads");
+                Assert.IsTrue(resolver.FlipCoins(100).All(x => x), "High roll should always return heads");
             }
 
             {
@@ -54,7 +54,7 @@ namespace menhera.tests
                 };
 
                 CoinResolver resolver = new(combatActor, services);
-                Debug.Assert(resolver.FlipCoins(100).All(x => !x), "Low roll should always return tails");
+                Assert.IsTrue(resolver.FlipCoins(100).All(x => !x), "Low roll should always return tails");
             }
         }
     }

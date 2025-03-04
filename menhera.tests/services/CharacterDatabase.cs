@@ -10,7 +10,7 @@ namespace menhera.tests
         {
             ServiceLocator serviceLoc = new();
             var characterDb = serviceLoc.GetService<CharacterDatabase>();
-            Debug.Assert(characterDb != null);
+            Assert.IsNotNull(characterDb);
             var charData = new CharacterData()
             {
                 Id = "player_test",
@@ -35,7 +35,7 @@ namespace menhera.tests
         {
             ServiceLocator serviceLoc = new();
             var characterDb = serviceLoc.GetService<CharacterDatabase>();
-            Debug.Assert(characterDb != null);
+            Assert.IsNotNull(characterDb);
             var succ = characterDb.LoadCharacterFromJson(
                 """
                 {
@@ -49,14 +49,26 @@ namespace menhera.tests
                     "Skills": [
                         {
                             "BasePower": 4,
-                            "CoinPower": 4,
+                            "CoinPower": 3,
                             "CoinCount": 2,
                         }
                     ]
                 }
                 """
                            );
-            Debug.Assert(succ);
+
+            Assert.IsTrue(succ);
+            var getChar = characterDb.GetCharacter("player_test", out var characterData);
+            Assert.IsTrue(getChar);
+            Assert.AreEqual("player_test", characterData.Id);
+            Assert.AreEqual("Test Kid", characterData.Name);
+            Assert.AreEqual(100, characterData.StartingHp);
+            Assert.AreEqual(2, characterData.StaggerThresholds.Length);
+            Assert.AreEqual(80, characterData.StaggerThresholds[0]);
+            Assert.AreEqual(40, characterData.StaggerThresholds[1]);
+            Assert.AreEqual(4, characterData.Skills[0].BasePower);
+            Assert.AreEqual(3, characterData.Skills[0].CoinPower);
+            Assert.AreEqual(2, characterData.Skills[0].CoinCount);
         }
     }
 }

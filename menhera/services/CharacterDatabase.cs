@@ -17,7 +17,7 @@ namespace menhera
 
         public void RegisterCharacter(CharacterData characterData)
         {
-            database.Add(characterData.Name, characterData);
+            database.Add(characterData.Id, characterData);
         }
 
         public bool LoadCharacterFromJson(string json)
@@ -34,6 +34,11 @@ namespace menhera
             var characterData = JsonSerializer.Deserialize<CharacterData>(openStream, options);
             Debug.Assert(!database.ContainsKey(characterData.Name));
             RegisterCharacter(characterData);
+        }
+
+        public bool GetCharacter(string id, out CharacterData characterData)
+        {
+            return database.TryGetValue(id, out characterData);
         }
     }
 }

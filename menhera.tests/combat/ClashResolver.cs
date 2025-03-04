@@ -55,14 +55,14 @@ namespace menhera.tests
             messagingService.Listen(systemId, (OnClashWin onClashWin) =>
             {
                 eventCalled = true;
-                Debug.Assert(onClashWin.Winner.Combatant == player, "player should always win");
-                Debug.Assert(onClashWin.clashCount >= enemySkillData.CoinCount, $"there should be at least {enemySkillData.CoinCount} clashes");
+                Assert.AreSame(onClashWin.Winner.Combatant, player, "player should always win");
+                Assert.IsTrue(onClashWin.clashCount >= enemySkillData.CoinCount, $"there should be at least {enemySkillData.CoinCount} clashes");
             }
             , Scope.All);
 
             var clashResult = resolver.ResolveClash();
-            Debug.Assert(clashResult == ClashResolver.ClashResult.PlayerWin, "Player should win this clash");
-            Debug.Assert(eventCalled, "OnClashWin should be called");
+            Assert.AreEqual(ClashResolver.ClashResult.PlayerWin, clashResult, "Player should win this clash");
+            Assert.IsTrue(eventCalled, "OnClashWin should be called");
         }
     }
 }

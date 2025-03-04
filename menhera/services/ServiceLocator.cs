@@ -75,7 +75,7 @@ namespace menhera
                             Debug.Assert(service != null, $"Could not find service of type {paramInfo.ParameterType}");
                             dependentServices.Add(service);
                         }
-                        var constructedService = typeNode.ctor.Invoke(dependentServices.ToArray()) as Service;
+                        var constructedService = typeNode.ctor.Invoke([.. dependentServices]) as Service;
                         Debug.Assert(constructedService != null, $"Failed to construct service of type {typeNode.type}");
                         serviceMap.Add(typeNode.type, constructedService);
                         typeNode.initialized = true;
