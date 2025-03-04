@@ -13,13 +13,17 @@ namespace menhera
     {
     }
 
-    public class OnClashWin : IEvent
+    public class OnClashWin(ClashingCombatant winner, ClashingCombatant loser, int clashCount) : IEvent
     {
-        public ClashingCombatant winner;
+        public ClashingCombatant Winner { get; private set; } = winner;
+        public ClashingCombatant Loser { get; private set; } = loser;
+        public int clashCount { get; private set; } = clashCount;
     }
 
-    public class OnClashLose : IEvent
+    public class OnClashLose(ClashingCombatant winner, ClashingCombatant loser, int clashCount) : IEvent
     {
-        public ClashingCombatant winner;
+        public ClashingCombatant Winner { get; private set; } = winner;
+        public ClashingCombatant Loser { get; private set; } = loser;
+        public int clashCount { get; private set; } = clashCount;
     }
 }

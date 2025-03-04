@@ -82,12 +82,12 @@ namespace menhera
             switch (winner)
             {
                 case ClashResult.PlayerWin:
-                    messagingService?.BroadcastEvent(playerId, new OnClashWin());
-                    messagingService?.BroadcastEvent(enemyId, new OnClashLose());
+                    messagingService?.BroadcastEvent(playerId, new OnClashWin(clash.player, clash.enemy, clashStepCount));
+                    messagingService?.BroadcastEvent(enemyId, new OnClashLose(clash.enemy, clash.player, clashStepCount));
                     break;
                 case ClashResult.EnemyWin:
-                    messagingService?.BroadcastEvent(enemyId, new OnClashWin());
-                    messagingService?.BroadcastEvent(playerId, new OnClashLose());
+                    messagingService?.BroadcastEvent(enemyId, new OnClashWin(clash.enemy, clash.player, clashStepCount));
+                    messagingService?.BroadcastEvent(playerId, new OnClashLose(clash.player, clash.enemy, clashStepCount));
                     break;
                 case ClashResult.Tie:
                     Debug.Assert(false);

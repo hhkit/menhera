@@ -3,6 +3,8 @@ This system broadcasts events to listeners in the system.
 Unlike a more traditional event system, it is the listeners who filter who tells them what happens, not the broadcaster who filters where the message lands.
 */
 
+using System.Diagnostics;
+
 namespace menhera
 {
     public abstract class IEvent
@@ -11,7 +13,7 @@ namespace menhera
 
     public delegate void MessageHandler<E>(E payload) where E : IEvent;
 
-    public class MessagingService : Service
+    public class MessagingService(TeamManager teamManager) : Service
     {
         protected delegate void MessageHandlerBase(IEvent payload);
         protected struct MessageHandlerMeta(ActorIdentifier character, MessageHandlerBase handler, long filter)
@@ -27,6 +29,7 @@ namespace menhera
         }
 
         protected readonly Dictionary<Type, List<MessageHandlerMeta>> listenerTable = [];
+        private readonly TeamManager teamManager = teamManager;
 
         public void BroadcastEvent(ActorIdentifier sender, IEvent ev)
         {
@@ -41,6 +44,12 @@ namespace menhera
         {
             GetEventTable<E>()
                 .Add(MessageHandlerMeta.Create(listener, handler, filter));
+        }
+
+        public void Listen<E>(ActorIdentifier listener, MessageHandler<E> handler, Scope scope) where E : IEvent
+        {
+            var filter = teamManager.GetFilterFor(listener, scope);
+            Listen(listener, handler, filter);
         }
 
         public void Unlisten<E>(ActorIdentifier listener) where E : IEvent
@@ -58,6 +67,8 @@ namespace menhera
 
         private List<MessageHandlerMeta> GetEventTable(Type eventType)
         {
+            if (!listenerTable.ContainsKey(eventType))
+                listenerTable.Add(eventType, []);
             return listenerTable.GetValueOrDefault(eventType, []);
         }
     }

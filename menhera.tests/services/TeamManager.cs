@@ -45,7 +45,6 @@ namespace menhera.tests
                 Debug.Assert(enemies.All(enemy => (enemy.Flag & playerAllyButSelfFilter) == 0), "enemies should not be in player's allybutself filter");
             }
 
-
             {
                 var playerAllFilter = teamManager.GetFilterFor(player, Scope.All);
                 Debug.Assert((player.Flag & playerAllFilter) != 0, "player should be in all filter");

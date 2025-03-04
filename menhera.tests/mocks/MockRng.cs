@@ -16,4 +16,12 @@ namespace menhera.tests
             return min;
         }
     }
+
+    public class AlwaysMidRandomNumberService : RandomNumberService
+    {
+        public override int NextInt(int exclusiveMax, int min)
+        {
+            return (exclusiveMax - min) / 2 + min;
+        }
+    }
 }

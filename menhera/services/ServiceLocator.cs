@@ -25,7 +25,6 @@ namespace menhera
                 {
                     foreach (var ctor in typeInfo.GetConstructors())
                     {
-                        Debug.WriteLine($"registering {typeInfo} with ctor {ctor}");
                         return new KeyValuePair<Type, TypeNode>(typeInfo, new TypeNode(typeInfo, ctor));
                     }
                     Debug.Assert(false, $"type {typeInfo} should have a constructor");
