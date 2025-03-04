@@ -3,8 +3,6 @@ This system broadcasts events to listeners in the system.
 Unlike a more traditional event system, it is the listeners who filter who tells them what happens, not the broadcaster who filters where the message lands.
 */
 
-using System.Diagnostics;
-
 namespace menhera
 {
     public abstract class IEvent
