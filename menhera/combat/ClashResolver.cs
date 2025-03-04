@@ -4,7 +4,7 @@ namespace menhera
 {
 
 
-    public class ClashResolver(Clash clash)
+    public class ClashResolver(Clash clash, ServiceLocator services)
     {
         public enum ClashResult
         {
@@ -14,7 +14,7 @@ namespace menhera
         }
 
         public readonly Clash clash = clash;
-        private readonly ServiceLocator services = ServiceLocator.Main;
+        private readonly ServiceLocator services = services;
 
         private bool[] ResolveCoins(ClashingCombatant config)
         {

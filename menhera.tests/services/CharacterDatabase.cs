@@ -8,8 +8,7 @@ namespace menhera.tests
         [TestMethod]
         public void TestSave()
         {
-            ServiceLocator.Initialize();
-            var serviceLoc = ServiceLocator.Main;
+            ServiceLocator serviceLoc = new();
             var characterDb = serviceLoc.GetService<CharacterDatabase>();
             Debug.Assert(characterDb != null);
             var charData = new CharacterData()
@@ -34,8 +33,7 @@ namespace menhera.tests
         [TestMethod]
         public void TestLoad()
         {
-            ServiceLocator.Initialize();
-            var serviceLoc = ServiceLocator.Main;
+            ServiceLocator serviceLoc = new();
             var characterDb = serviceLoc.GetService<CharacterDatabase>();
             Debug.Assert(characterDb != null);
             var succ = characterDb.LoadCharacterFromJson(

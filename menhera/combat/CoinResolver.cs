@@ -5,12 +5,6 @@ namespace menhera
         private readonly CombatActor combatant = combatant;
         private readonly ServiceLocator services = services;
 
-        public CoinResolver(CombatActor combatant)
-        : this(combatant, ServiceLocator.Main)
-        {
-        }
-
-
         public bool[] FlipCoins(int coinCount)
         {
             var results = new bool[coinCount];

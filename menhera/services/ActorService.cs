@@ -4,7 +4,7 @@ namespace menhera
     {
         public int Id { get; private set; } = id;
         public int Team { get; private set; } = team;
-        public long Flag { get => 1L << Id; }
+        public readonly long Flag { get => 1L << Id; }
 
         public static bool operator ==(ActorIdentifier c1, ActorIdentifier c2)
         {
@@ -32,7 +32,7 @@ namespace menhera
 
     public class ActorService(TeamManager teamManager) : Service
     {
-        readonly Dictionary<CombatActor, ActorIdentifier> lookupTable = new();
+        readonly Dictionary<CombatActor, ActorIdentifier> lookupTable = [];
         readonly TeamManager teamManager = teamManager;
 
         public ActorIdentifier GetId(CombatActor combatant)

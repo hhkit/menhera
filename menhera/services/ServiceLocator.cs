@@ -7,8 +7,6 @@ namespace menhera
 
     public class ServiceLocator
     {
-        public static ServiceLocator Main { get; private set; } = new();
-
         private readonly Dictionary<Type, Service> serviceMap = [];
 
         private class TypeNode(Type type, ConstructorInfo ctor)
@@ -86,12 +84,6 @@ namespace menhera
                 }
                 Debug.Assert(prevCount < serviceMap.Count, $"Ran out of initializable services {prevCount} < {serviceMap.Count}, max: {typeMap.Count}");
             }
-        }
-
-        public static void Initialize()
-        {
-            if (Main == null)
-                Main = new();
         }
 
         public void AddService<T>(T service) where T : Service

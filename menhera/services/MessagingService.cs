@@ -10,23 +10,23 @@ namespace menhera
     }
 
     public delegate void MessageHandler<E>(E payload) where E : IEvent;
-    public delegate void MessageHandlerBase(IEvent payload);
-
-    struct MessageHandlerMeta(ActorIdentifier character, MessageHandlerBase handler, long filter)
-    {
-        public ActorIdentifier character = character;
-        public MessageHandlerBase handler = handler;
-        public long filter = filter;
-
-        public static MessageHandlerMeta Create<E>(ActorIdentifier character, MessageHandler<E> handler, long filter) where E : IEvent
-        {
-            return new(character, payload => handler((E)payload), filter);
-        }
-    }
 
     public class MessagingService : Service
     {
-        readonly Dictionary<Type, List<MessageHandlerMeta>> listenerTable = [];
+        protected delegate void MessageHandlerBase(IEvent payload);
+        protected struct MessageHandlerMeta(ActorIdentifier character, MessageHandlerBase handler, long filter)
+        {
+            public ActorIdentifier character = character;
+            public MessageHandlerBase handler = handler;
+            public long filter = filter;
+
+            public static MessageHandlerMeta Create<E>(ActorIdentifier character, MessageHandler<E> handler, long filter) where E : IEvent
+            {
+                return new(character, payload => handler((E)payload), filter);
+            }
+        }
+
+        protected readonly Dictionary<Type, List<MessageHandlerMeta>> listenerTable = [];
 
         public void BroadcastEvent(ActorIdentifier sender, IEvent ev)
         {
