@@ -16,11 +16,11 @@ namespace menhera
             return !(c1 == c2);
         }
 
-        public override readonly bool Equals(object obj)
+        public override readonly bool Equals(object? obj) => obj is ActorIdentifier other && Equals(other);
+
+        public readonly bool Equals(ActorIdentifier obj)
         {
-            if (obj == null || GetType() != obj.GetType())
-                return false;
-            return this == ((ActorIdentifier)obj);
+            return this == obj;
         }
 
         public override readonly int GetHashCode()

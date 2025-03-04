@@ -53,19 +53,17 @@ namespace menhera
                 }
             }
 
-            var initCount = 0;
             foreach (var overrideService in overrideServices)
             {
                 var baseServiceNode = typeMap.Select((kvp) => kvp.Value).Where(v => overrideService.GetType().IsSubclassOf(v.type)).First();
                 Debug.Assert(baseServiceNode != null, $"Service {overrideService.GetType()} must inherit a type");
                 baseServiceNode.initialized = true;
                 serviceMap.Add(baseServiceNode.type, overrideService);
-                initCount++;
             }
 
-            while (initCount < typeMap.Count())
+            while (serviceMap.Count < typeMap.Count)
             {
-                var prevCount = initCount;
+                var prevCount = serviceMap.Count;
                 foreach (var (key, typeNode) in typeMap)
                 {
                     if (typeNode.initialized)
@@ -84,10 +82,9 @@ namespace menhera
                         Debug.Assert(constructedService != null, $"Failed to construct service of type {typeNode.type}");
                         serviceMap.Add(typeNode.type, constructedService);
                         typeNode.initialized = true;
-                        initCount++;
                     }
                 }
-                Debug.Assert(prevCount < initCount, $"Ran out of initializable services {prevCount} < {initCount}, max: {typeMap.Count}");
+                Debug.Assert(prevCount < serviceMap.Count, $"Ran out of initializable services {prevCount} < {serviceMap.Count}, max: {typeMap.Count}");
             }
         }
 
