@@ -27,7 +27,6 @@ namespace menhera.tests
                 ]
             };
 
-
             var data = characterDb.Serialize(charData);
             Debug.WriteLine(data);
         }

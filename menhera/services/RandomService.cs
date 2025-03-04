@@ -12,7 +12,7 @@ namespace menhera
         {
             rng = new(seed);
         }
-        public int NextInt(int exclusiveMax, int min = 0)
+        public virtual int NextInt(int exclusiveMax, int min = 0)
         {
             var diff = exclusiveMax - min;
             return (int)rng.NextInt64(diff) + min;

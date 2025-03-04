@@ -22,7 +22,7 @@ namespace menhera
         public bool FlipCoin()
         {
             var rng = services.GetService<RandomNumberService>();
-            return rng.NextInt(100) < combatant.sanity + 50;
+            return combatant.sanity + 50 < rng.NextInt(100);
         }
     }
 }

@@ -19,7 +19,7 @@ namespace menhera
             public bool initialized = false;
         }
 
-        public ServiceLocator()
+        public ServiceLocator(params Service[] overrideServices)
         {
             var typeInfos = typeof(Service).Assembly.GetTypes()
                 .Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(Service)))
@@ -35,6 +35,7 @@ namespace menhera
                 });
 
             Dictionary<Type, TypeNode> typeMap = new(typeInfos);
+
 
             foreach (var (type, typeNode) in typeMap)
             {
@@ -53,6 +54,15 @@ namespace menhera
             }
 
             var initCount = 0;
+            foreach (var overrideService in overrideServices)
+            {
+                var baseServiceNode = typeMap.Select((kvp) => kvp.Value).Where(v => overrideService.GetType().IsSubclassOf(v.type)).First();
+                Debug.Assert(baseServiceNode != null, $"Service {overrideService.GetType()} must inherit a type");
+                baseServiceNode.initialized = true;
+                serviceMap.Add(baseServiceNode.type, overrideService);
+                initCount++;
+            }
+
             while (initCount < typeMap.Count())
             {
                 var prevCount = initCount;
