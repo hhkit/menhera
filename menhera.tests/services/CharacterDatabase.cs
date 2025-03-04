@@ -39,7 +39,7 @@ namespace menhera.tests
             var serviceLoc = ServiceLocator.Main;
             var characterDb = serviceLoc.GetService<CharacterDatabase>();
             Debug.Assert(characterDb != null);
-            characterDb.LoadCharacterFromJson(
+            var succ = characterDb.LoadCharacterFromJson(
                 """
                 {
                     "Id": "player_test",
@@ -53,12 +53,13 @@ namespace menhera.tests
                         {
                             "BasePower": 4,
                             "CoinPower": 4,
-                            "CoinCount": 2
+                            "CoinCount": 2,
                         }
                     ]
                 }
                 """
                            );
+            Debug.Assert(succ);
         }
     }
 }

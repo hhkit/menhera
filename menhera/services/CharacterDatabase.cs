@@ -15,12 +15,17 @@ namespace menhera
             return JsonSerializer.Serialize(charData, options);
         }
 
-        public void LoadCharacterFromJson(string json)
+        public void RegisterCharacter(CharacterData characterData)
+        {
+            database.Add(characterData.Name, characterData);
+        }
+
+        public bool LoadCharacterFromJson(string json)
         {
             var characterData = JsonSerializer.Deserialize<CharacterData>(json, options);
-            Debug.WriteLine("name: " + characterData.Name);
             Debug.Assert(!database.ContainsKey(characterData.Name));
-            database.Add(characterData.Name, characterData);
+            RegisterCharacter(characterData);
+            return true;
         }
 
         public void LoadCharacterFromFile(string filePath)
@@ -28,7 +33,7 @@ namespace menhera
             using FileStream openStream = File.OpenRead(filePath);
             var characterData = JsonSerializer.Deserialize<CharacterData>(openStream, options);
             Debug.Assert(!database.ContainsKey(characterData.Name));
-            database.Add(characterData.Name, characterData);
+            RegisterCharacter(characterData);
         }
     }
 }

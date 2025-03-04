@@ -23,16 +23,21 @@ namespace menhera
             return this == ((ActorIdentifier)obj);
         }
 
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             return Id >> 7 & Team << 18;
         }
     }
 
 
-    public class ActorService : Service
+    public class ActorService(TeamManager teamManager) : Service
     {
         readonly Dictionary<CombatActor, ActorIdentifier> lookupTable = new();
+        readonly TeamManager teamManager = teamManager;
+
+        public ActorService()
+        : this(ServiceLocator.Main.GetService<TeamManager>())
+        { }
 
         public ActorIdentifier GetId(CombatActor combatant)
         {
@@ -45,6 +50,7 @@ namespace menhera
         public ActorIdentifier Register(CombatActor combatant, int team)
         {
             var newId = new ActorIdentifier(lookupTable.Count, team);
+            teamManager.Join(newId, team);
             lookupTable.Add(combatant, newId);
             return newId;
         }

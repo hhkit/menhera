@@ -11,17 +11,16 @@ namespace menhera
         All,
     }
 
-    public class TeamManager
+    public class TeamManager : Service
     {
-        readonly List<ActorIdentifier> members = [];
         readonly Dictionary<int, List<ActorIdentifier>> teams = [];
 
-        public ActorIdentifier Join(int team)
+        public void Join(ActorIdentifier actor, int team)
         {
-            var member = new ActorIdentifier(members.Count, team);
-            members.Add(member);
-            teams.GetValueOrDefault(team, []).Add(member);
-            return member;
+            if (!teams.ContainsKey(team))
+                teams.Add(team, []);
+
+            teams[team].Add(actor);
         }
 
         public long GetFilterFor(ActorIdentifier member, Scope scope)
