@@ -15,6 +15,8 @@ namespace menhera
 
     public class MessagingService(TeamManager teamManager) : Service
     {
+        private readonly TeamManager teamManager = teamManager;
+
         protected delegate void MessageHandlerBase(IEvent payload);
         protected struct MessageHandlerMeta(ActorIdentifier character, MessageHandlerBase handler, long filter)
         {
@@ -29,7 +31,6 @@ namespace menhera
         }
 
         protected readonly Dictionary<Type, List<MessageHandlerMeta>> listenerTable = [];
-        private readonly TeamManager teamManager = teamManager;
 
         public void BroadcastEvent(ActorIdentifier sender, IEvent ev)
         {

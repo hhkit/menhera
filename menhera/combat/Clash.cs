@@ -1,16 +1,16 @@
 namespace menhera
 {    // this stores the data for a single combatant during a clash
-    public struct ClashingCombatant(CombatActor combatant, SkillData skill)
+    public class ClashingCombatant(CombatActor combatant, SkillData skill)
     {
         public CombatActor Combatant { get; private set; } = combatant;
         public SkillData Skill { get; private set; } = skill;
-        public int brokenCoins = 0;
-        public readonly int CoinsLeft { get => Skill.CoinCount - brokenCoins; }
+        public int BrokenCoins { get; set; } = 0;
+        public int CoinsLeft { get => Skill.CoinCount - BrokenCoins; }
     }
 
     public class Clash(CombatActor player, SkillData playerSkill, CombatActor enemy, SkillData enemySkill)
     {
-        public ClashingCombatant player = new(player, playerSkill);
-        public ClashingCombatant enemy = new(enemy, enemySkill);
+        public ClashingCombatant Player { get; private set; } = new(player, playerSkill);
+        public ClashingCombatant Enemy { get; private set; } = new(enemy, enemySkill);
     }
 }

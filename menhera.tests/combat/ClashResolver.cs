@@ -56,7 +56,7 @@ namespace menhera.tests
             {
                 eventCalled = true;
                 Assert.AreSame(onClashWin.Winner.Combatant, player, "player should always win");
-                Assert.IsTrue(onClashWin.clashCount >= enemySkillData.CoinCount, $"there should be at least {enemySkillData.CoinCount} clashes");
+                Assert.IsTrue(onClashWin.ClashCount >= enemySkillData.CoinCount, $"there should be at least {enemySkillData.CoinCount} clashes");
             }
             , Scope.All);
 

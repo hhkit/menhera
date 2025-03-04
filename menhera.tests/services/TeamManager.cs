@@ -17,11 +17,8 @@ namespace menhera.tests
             {
                 sanity = 0,
             }, 0);
-            for (var i = 0; i < 6; ++i)
-                actorService.Register(new CombatActor(), 0);
+
             var allies = Enumerable.Range(0, 6).Select(ind => actorService.Register(new CombatActor(), 0)).ToArray();
-
-
             var enemies = Enumerable.Range(0, 6).Select(ind => actorService.Register(new CombatActor(), 1)).ToArray();
 
             {

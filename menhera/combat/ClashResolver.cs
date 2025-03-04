@@ -23,7 +23,7 @@ namespace menhera
             var id = actorService.GetId(config.Combatant);
 
             var coinResolver = new CoinResolver(config.Combatant, services);
-            var coinResults = coinResolver.FlipCoins(config.Skill.CoinCount - config.brokenCoins);
+            var coinResults = coinResolver.FlipCoins(config.Skill.CoinCount - config.BrokenCoins);
             messagingService.BroadcastEvent(id, new OnCoinFlip(coinResults));
 
             foreach (var coinRes in coinResults)
@@ -45,8 +45,8 @@ namespace menhera
 
         private ClashResult ResolveClashStep()
         {
-            var playerClashPower = ResolveClashPower(clash.player);
-            var enemyClashPower = ResolveClashPower(clash.enemy);
+            var playerClashPower = ResolveClashPower(clash.Player);
+            var enemyClashPower = ResolveClashPower(clash.Enemy);
 
             if (playerClashPower == enemyClashPower)
                 return ClashResult.Tie;
@@ -58,37 +58,37 @@ namespace menhera
         {
             var messagingService = services.GetService<MessagingService>();
             var actorService = services.GetService<ActorService>();
-            var playerId = actorService.GetId(clash.player.Combatant);
-            var enemyId = actorService.GetId(clash.enemy.Combatant);
+            var playerId = actorService.GetId(clash.Player.Combatant);
+            var enemyId = actorService.GetId(clash.Enemy.Combatant);
 
             int clashStepCount = 0;
-            while (clash.player.CoinsLeft > 0 && clash.enemy.CoinsLeft > 0)
+            while (clash.Player.CoinsLeft > 0 && clash.Enemy.CoinsLeft > 0)
             {
                 clashStepCount++;
-                Debug.Assert(clashStepCount < 1000, $"exceeded clash limit of 1000, playerCoins {clash.player.CoinsLeft}, enemyCoins {clash.enemy.CoinsLeft}"); // limit the number of iterations
+                Debug.Assert(clashStepCount < 1000, $"exceeded clash limit of 1000, playerCoins {clash.Player.CoinsLeft}, enemyCoins {clash.Enemy.CoinsLeft}"); // limit the number of iterations
 
                 var clashStepResult = ResolveClashStep();
                 switch (clashStepResult)
                 {
                     case ClashResult.PlayerWin:
-                        clash.enemy.brokenCoins++;
+                        clash.Enemy.BrokenCoins++;
                         break;
                     case ClashResult.EnemyWin:
-                        clash.player.brokenCoins++;
+                        clash.Player.BrokenCoins++;
                         break;
                 }
             }
 
-            var winner = clash.player.CoinsLeft > 0 ? ClashResult.PlayerWin : ClashResult.EnemyWin;
+            var winner = clash.Player.CoinsLeft > 0 ? ClashResult.PlayerWin : ClashResult.EnemyWin;
             switch (winner)
             {
                 case ClashResult.PlayerWin:
-                    messagingService?.BroadcastEvent(playerId, new OnClashWin(clash.player, clash.enemy, clashStepCount));
-                    messagingService?.BroadcastEvent(enemyId, new OnClashLose(clash.enemy, clash.player, clashStepCount));
+                    messagingService?.BroadcastEvent(playerId, new OnClashWin(clash.Player, clash.Enemy, clashStepCount));
+                    messagingService?.BroadcastEvent(enemyId, new OnClashLose(clash.Enemy, clash.Player, clashStepCount));
                     break;
                 case ClashResult.EnemyWin:
-                    messagingService?.BroadcastEvent(enemyId, new OnClashWin(clash.enemy, clash.player, clashStepCount));
-                    messagingService?.BroadcastEvent(playerId, new OnClashLose(clash.player, clash.enemy, clashStepCount));
+                    messagingService?.BroadcastEvent(enemyId, new OnClashWin(clash.Enemy, clash.Player, clashStepCount));
+                    messagingService?.BroadcastEvent(playerId, new OnClashLose(clash.Player, clash.Enemy, clashStepCount));
                     break;
                 case ClashResult.Tie:
                     Debug.Assert(false);
