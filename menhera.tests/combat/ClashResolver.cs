@@ -14,15 +14,15 @@ namespace menhera.tests
 
             var playerSkillData = new SkillData()
             {
-                BasePower = 6,
-                CoinPower = 2,
-                CoinCount = 3,
+                BasePower = 4,
+                CoinPower = 0,
+                CoinCount = 2,
             };
 
             var enemySkillData = new SkillData()
             {
                 BasePower = 0,
-                CoinPower = 3,
+                CoinPower = 2,
                 CoinCount = 2,
             };
 
@@ -48,15 +48,17 @@ namespace menhera.tests
             var systemId = actorService.Register(new CombatActor(), -1);
 
             bool eventCalled = false;
-            messagingService.Listen(systemId, (OnClashWin onClashWin) =>
-            {
-                eventCalled = true;
-                Debug.Assert(onClashWin.clashCount == enemySkillData.CoinCount, $"player should always win, therefore, we should clash {enemySkillData.CoinCount} times");
-            }
-            , Scope.All);
 
             Clash clash = new(player, playerSkillData, enemy, enemySkillData);
             ClashResolver resolver = new(clash, services);
+
+            messagingService.Listen(systemId, (OnClashWin onClashWin) =>
+            {
+                eventCalled = true;
+                Debug.Assert(onClashWin.Winner.Combatant == player, "player should always win");
+                Debug.Assert(onClashWin.clashCount >= enemySkillData.CoinCount, $"there should be at least {enemySkillData.CoinCount} clashes");
+            }
+            , Scope.All);
 
             var clashResult = resolver.ResolveClash();
             Debug.Assert(clashResult == ClashResolver.ClashResult.PlayerWin, "Player should win this clash");

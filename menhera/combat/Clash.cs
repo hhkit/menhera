@@ -5,7 +5,7 @@ namespace menhera
         public CombatActor Combatant { get; private set; } = combatant;
         public SkillData Skill { get; private set; } = skill;
         public int brokenCoins = 0;
-        public int coinsLeft { get => Skill.CoinCount - brokenCoins; }
+        public readonly int CoinsLeft { get => Skill.CoinCount - brokenCoins; }
     }
 
     public class Clash(CombatActor player, SkillData playerSkill, CombatActor enemy, SkillData enemySkill)

@@ -24,17 +24,17 @@ namespace menhera
 
             var coinResolver = new CoinResolver(config.Combatant, services);
             var coinResults = coinResolver.FlipCoins(config.Skill.CoinCount - config.brokenCoins);
-            messagingService?.BroadcastEvent(id, new OnCoinFlip(coinResults));
+            messagingService.BroadcastEvent(id, new OnCoinFlip(coinResults));
 
             foreach (var coinRes in coinResults)
-                messagingService?.BroadcastEvent(id, coinRes ? new OnHeadsHit() : new OnTailsHit());
+                messagingService.BroadcastEvent(id, coinRes ? new OnHeadsHit() : new OnTailsHit());
 
             return coinResults;
         }
 
-        private int CalculateClashPower(SkillData skillData, bool[] coins)
+        private static int CalculateClashPower(SkillData skillData, bool[] coins)
         {
-            return skillData.BasePower + coins.Select(x => x).Count() * skillData.CoinPower;
+            return skillData.BasePower + coins.Where(x => x).Count() * skillData.CoinPower;
         }
 
         private int ResolveClashPower(ClashingCombatant combatant)
@@ -62,12 +62,13 @@ namespace menhera
             var enemyId = actorService.GetId(clash.enemy.Combatant);
 
             int clashStepCount = 0;
-            while (clash.player.coinsLeft > 0 && clash.enemy.coinsLeft > 0)
+            while (clash.player.CoinsLeft > 0 && clash.enemy.CoinsLeft > 0)
             {
                 clashStepCount++;
-                Debug.Assert(clashStepCount < 1000); // limit the number of iterations
+                Debug.Assert(clashStepCount < 1000, $"exceeded clash limit of 1000, playerCoins {clash.player.CoinsLeft}, enemyCoins {clash.enemy.CoinsLeft}"); // limit the number of iterations
 
-                switch (ResolveClashStep())
+                var clashStepResult = ResolveClashStep();
+                switch (clashStepResult)
                 {
                     case ClashResult.PlayerWin:
                         clash.enemy.brokenCoins++;
@@ -78,7 +79,7 @@ namespace menhera
                 }
             }
 
-            var winner = clash.player.coinsLeft > 0 ? ClashResult.PlayerWin : ClashResult.EnemyWin;
+            var winner = clash.player.CoinsLeft > 0 ? ClashResult.PlayerWin : ClashResult.EnemyWin;
             switch (winner)
             {
                 case ClashResult.PlayerWin:
