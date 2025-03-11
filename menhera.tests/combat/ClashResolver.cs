@@ -26,7 +26,7 @@ namespace menhera.tests
 
             var player = new CombatActor()
             {
-                data = new CharacterData()
+                characterData = new CharacterData()
                 {
                     Skills = [playerSkillData]
                 },
@@ -35,7 +35,7 @@ namespace menhera.tests
 
             var enemy = new CombatActor()
             {
-                data = new CharacterData()
+                characterData = new CharacterData()
                 {
                     Skills = [enemySkillData]
                 },

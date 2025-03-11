@@ -15,7 +15,7 @@ namespace menhera.tests
             {
                 Id = "player_test",
                 Name = "Test Kid",
-                StartingHp = 100,
+                MaxHp = 100,
                 StaggerThresholds = [80, 40],
                 Skills = [
                     new SkillData() {
@@ -41,7 +41,6 @@ namespace menhera.tests
                 {
                     "Id": "player_test",
                     "Name": "Test Kid",
-                    "StartingHp": 100,
                     "StaggerThresholds": [
                         80,
                         40,
@@ -62,7 +61,6 @@ namespace menhera.tests
             Assert.IsTrue(getChar);
             Assert.AreEqual("player_test", characterData.Id);
             Assert.AreEqual("Test Kid", characterData.Name);
-            Assert.AreEqual(100, characterData.StartingHp);
             Assert.AreEqual(2, characterData.StaggerThresholds.Length);
             Assert.AreEqual(80, characterData.StaggerThresholds[0]);
             Assert.AreEqual(40, characterData.StaggerThresholds[1]);

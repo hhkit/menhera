@@ -33,7 +33,6 @@ namespace menhera
     public class ActorService(TeamManager teamManager) : Service
     {
         readonly Dictionary<CombatActor, ActorIdentifier> lookupTable = [];
-        readonly TeamManager teamManager = teamManager;
 
         public ActorIdentifier GetId(CombatActor combatant)
         {

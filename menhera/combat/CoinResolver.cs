@@ -2,9 +2,6 @@ namespace menhera
 {
     public class CoinResolver(CombatActor combatant, ServiceLocator services)
     {
-        private readonly CombatActor combatant = combatant;
-        private readonly ServiceLocator services = services;
-
         public bool[] FlipCoins(int coinCount)
         {
             var results = new bool[coinCount];

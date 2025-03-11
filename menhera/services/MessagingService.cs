@@ -13,14 +13,12 @@ namespace menhera
 
     public class MessagingService(TeamManager teamManager) : Service
     {
-        private readonly TeamManager teamManager = teamManager;
-
         protected delegate void MessageHandlerBase(IEvent payload);
         protected struct MessageHandlerMeta(ActorIdentifier character, MessageHandlerBase handler, long filter)
         {
-            public ActorIdentifier character = character;
-            public MessageHandlerBase handler = handler;
-            public long filter = filter;
+            public readonly ActorIdentifier character = character;
+            public readonly MessageHandlerBase handler = handler;
+            public readonly long filter = filter;
 
             public static MessageHandlerMeta Create<E>(ActorIdentifier character, MessageHandler<E> handler, long filter) where E : IEvent
             {
@@ -29,6 +27,11 @@ namespace menhera
         }
 
         protected readonly Dictionary<Type, List<MessageHandlerMeta>> listenerTable = [];
+        public void BroadcastEvent(IEvent ev)
+        {
+            foreach (var listener in GetEventTable(ev.GetType()))
+                listener.handler.Invoke(ev);
+        }
 
         public void BroadcastEvent(ActorIdentifier sender, IEvent ev)
         {

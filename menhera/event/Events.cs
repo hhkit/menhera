@@ -1,5 +1,18 @@
 namespace menhera
 {
+    public class OnCombatStart : IEvent
+    {
+    }
+
+    public class OnCombatEnd : IEvent
+    {
+    }
+
+
+    public class OnDeath : IEvent
+    {
+    }
+
     public class OnCoinFlip(bool[] coinResults) : IEvent
     {
         public bool[] CoinRes { get; private set; } = coinResults;
@@ -10,6 +23,10 @@ namespace menhera
     }
 
     public class OnTailsHit : IEvent
+    {
+    }
+
+    public class OnClashStart : IEvent
     {
     }
 
